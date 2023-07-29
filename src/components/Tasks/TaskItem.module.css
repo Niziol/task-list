@@ -1,0 +1,10 @@
+.task {
+  padding: 1rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.task:last-of-type {
+  border-bottom: none;
+}
