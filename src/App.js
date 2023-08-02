@@ -8,11 +8,25 @@ function App() {
 	const [tasks, setTasks] = useState([]);
 	const URL =
 		'https://react-task-list-4976a-default-rtdb.firebaseio.com/tasks.json';
-	const [isLoading, error, fetchHandler] = useHttpRequest(URL, 'GET', setTasks);
+
+	const { isLoading, error, sendRequest: fetchTasks } = useHttpRequest();
 
 	useEffect(() => {
-		fetchHandler();
-	}, []);
+		const transformTask = (taskObj) => {
+			const loadedTasks = [];
+			for (const taskKey in taskObj) {
+				loadedTasks.push({ id: taskKey, text: taskObj[taskKey].text });
+			}
+			setTasks(loadedTasks);
+		};
+
+		fetchTasks(
+			{
+				url: URL,
+			},
+			transformTask
+		);
+	}, [fetchTasks]);
 
 	const taskAddHandler = (task) => {
 		setTasks((prevTasks) => prevTasks.concat(task));
@@ -25,7 +39,7 @@ function App() {
 				items={tasks}
 				loading={isLoading}
 				error={error}
-				onFetch={fetchHandler}
+				onFetch={fetchTasks}
 			/>
 		</React.Fragment>
 	);
